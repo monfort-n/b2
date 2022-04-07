@@ -1,0 +1,24 @@
+version: '3.4'
+services:
+  traefik:
+    image: traefik:1.7.4
+    command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+    ports:
+      - "81:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
+    labels:
+      - "traefik.backend=Figaro"
+      - "traefik.docker.network=app-network"
+      - "traefik.frontend.rule=Host:figaro.localhost"
+
+    networks:
+      - webgateway
+
+#Docker Networks
+networks:
+   webgateway:
+    driver: bridge
